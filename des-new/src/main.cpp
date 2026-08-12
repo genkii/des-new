@@ -23,6 +23,7 @@ int main() {
     constexpr float cameraSpeed = 200.0f;
 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+    SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(screenWidth, screenHeight, "Dungeon Escape");
 
     // Uses Raylib functions so must be after InitWindow
@@ -53,6 +54,9 @@ int main() {
             if (IsKeyDown(KEY_S)) camera.target.y += cameraSpeed * tickRate;
             if (IsKeyDown(KEY_A)) camera.target.x -= cameraSpeed * tickRate;
             if (IsKeyDown(KEY_D)) camera.target.x += cameraSpeed * tickRate;
+
+            camera.target.x = round(camera.target.x);
+            camera.target.y = round(camera.target.y);
 
             // Simulation loop
             accumulator -= tickRate;

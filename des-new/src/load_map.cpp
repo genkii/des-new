@@ -40,6 +40,7 @@ class TileMap {
             for (auto& tileset : tilesets) {
                 Image image = LoadImage(tileset.getImagePath().c_str());
                 Texture2D texture = LoadTextureFromImage(image);
+                SetTextureFilter(texture, TEXTURE_FILTER_POINT);
                 textures.emplace(tileset.getName(), texture);
                 UnloadImage(image);
             }
@@ -124,9 +125,12 @@ class TileMap {
 
                         uint32_t local = gid - tileset->getFirstGID();
 
+                        int row = local / tileset->getColumnCount();
+                        float y = static_cast<float>(row * tile_height);
+
                         Rectangle source {
                             static_cast<float>((local % tileset->getColumnCount()) * tile_width),
-                            static_cast<float>((local / tileset->getColumnCount()) * tile_height),
+                            y,
                             static_cast<float>(tile_width),
                             static_cast<float>(tile_height)
                         };
@@ -140,7 +144,7 @@ class TileMap {
 
 
                         auto texture = textures.at(tileset->getName());
-                        Vector2 origin {static_cast<float>(tile_width / 2), static_cast<float>(tile_height / 2)};
+                        Vector2 origin {static_cast<float>(tile_width) / 2.0f, static_cast<float>(tile_width) / 2.0f};
 
                         DrawTexturePro(texture, source, dist, origin, 0, WHITE);
 
